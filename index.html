@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>安全中文文本翻译器</title>
+    <title>中文文本翻译器</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 700px;
+            max-width: 600px;
             margin: 50px auto;
             padding: 20px;
             background-color: #f5f5f5;
@@ -25,7 +25,6 @@
         }
         .section {
             margin-bottom: 20px;
-            position: relative;
         }
         label {
             display: block;
@@ -41,12 +40,6 @@
             font-size: 16px;
             resize: vertical;
             min-height: 100px;
-            font-family: 'Courier New', monospace;
-        }
-        textarea:focus {
-            outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
         }
         .button-group {
             display: flex;
@@ -55,13 +48,12 @@
         }
         button {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
+            transition: background-color 0.3s;
         }
         .btn-encrypt {
             background-color: #4CAF50;
@@ -84,18 +76,8 @@
             background-color: #4CAF50;
             color: white;
         }
-        .btn-validate {
-            background-color: #9C27B0;
-            color: white;
-        }
-        button:hover:not(:disabled) {
+        button:hover {
             opacity: 0.9;
-            transform: translateY(-1px);
-        }
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-            opacity: 0.6;
         }
         .info {
             text-align: center;
@@ -123,11 +105,6 @@
             text-align: center;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-family: 'Courier New', monospace;
-        }
-        .char-input input:focus {
-            outline: none;
-            border-color: #4CAF50;
         }
         .current-chars {
             text-align: center;
@@ -140,88 +117,26 @@
             color: #f44336;
             font-size: 14px;
             margin-top: 5px;
-            padding: 5px;
-            background-color: #ffebee;
-            border-radius: 3px;
-        }
-        .warning {
-            color: #FF9800;
-            font-size: 14px;
-            margin-top: 5px;
-            padding: 5px;
-            background-color: #fff3e0;
-            border-radius: 3px;
-        }
-        .success {
-            color: #4CAF50;
-            font-size: 14px;
-            margin-top: 5px;
-            padding: 5px;
-            background-color: #e8f5e8;
-            border-radius: 3px;
-        }
-        .security-info {
-            background-color: #e3f2fd;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border-left: 4px solid #2196F3;
-        }
-        .validation-summary {
-            background-color: #f5f5f5;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-        }
-        .char-count {
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-            font-size: 12px;
-            color: #666;
-            background: rgba(255,255,255,0.8);
-            padding: 2px 6px;
-            border-radius: 3px;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background-color: #e0e0e0;
-            border-radius: 2px;
-            margin: 5px 0;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: #4CAF50;
-            transition: width 0.3s;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>安全中文文本翻译器</h1>
+        <h1>中文文本翻译器</h1>
         
-        <div class="security-info">
-            <strong>🔒 安全功能：</strong>输入验证 | 字符过滤 | 长度限制 | 防注入 | 完整性检查
-        </div>
-
-        <button class="btn-settings" onclick="toggleSettings()">⚙️ 安全设置</button>
+        <button class="btn-settings" onclick="toggleSettings()">⚙️ 设置自定义字符</button>
         
         <div id="settingsPanel" class="settings-panel">
             <label>自定义五个固定字符：</label>
             <div class="current-chars" id="currentChars">当前字符：天地玄黄宇</div>
             <div class="char-input">
-                <input type="text" id="char1" maxlength="1" placeholder="字符1" oninput="validateCharInput(this)">
-                <input type="text" id="char2" maxlength="1" placeholder="字符2" oninput="validateCharInput(this)">
-                <input type="text" id="char3" maxlength="1" placeholder="字符3" oninput="validateCharInput(this)">
-                <input type="text" id="char4" maxlength="1" placeholder="字符4" oninput="validateCharInput(this)">
-                <input type="text" id="char5" maxlength="1" placeholder="字符5" oninput="validateCharInput(this)">
+                <input type="text" id="char1" maxlength="1" placeholder="字符1">
+                <input type="text" id="char2" maxlength="1" placeholder="字符2">
+                <input type="text" id="char3" maxlength="1" placeholder="字符3">
+                <input type="text" id="char4" maxlength="1" placeholder="字符4">
+                <input type="text" id="char5" maxlength="1" placeholder="字符5">
             </div>
             <div id="settingsError" class="error" style="display: none;"></div>
-            <div id="settingsWarning" class="warning" style="display: none;"></div>
             <div class="button-group">
                 <button class="btn-save" onclick="saveCustomChars()">保存设置</button>
                 <button class="btn-clear" onclick="resetToDefault()">恢复默认</button>
@@ -230,15 +145,9 @@
 
         <div class="section">
             <label for="plainText">明文：</label>
-            <textarea id="plainText" placeholder="请输入要转换的明文（最多1000字符）..." 
-                      maxlength="1000" oninput="validatePlainText(this)"></textarea>
-            <div class="char-count">
-                <span id="plainCount">0</span>/1000
-            </div>
-            <div id="plainWarning" class="warning" style="display: none;"></div>
+            <textarea id="plainText" placeholder="请输入要转换的明文..."></textarea>
             <div class="button-group">
-                <button class="btn-encrypt" onclick="encryptText()" id="encryptBtn">明文 → 暗文</button>
-                <button class="btn-validate" onclick="validatePlainTextContent()">验证内容</button>
+                <button class="btn-encrypt" onclick="encryptText()">明文 → 暗文</button>
                 <button class="btn-clear" onclick="clearPlain()">清空</button>
             </div>
         </div>
@@ -246,19 +155,13 @@
         <div class="section">
             <label for="cipherText">暗文：</label>
             <textarea id="cipherText" placeholder="暗文将显示在这里..." readonly></textarea>
-            <div class="progress-bar">
-                <div class="progress-fill" id="cipherProgress" style="width: 0%"></div>
-            </div>
-            <div id="cipherStats" class="validation-summary" style="display: none;"></div>
         </div>
 
         <div class="section">
             <label for="decryptInput">暗文输入：</label>
-            <textarea id="decryptInput" placeholder="请输入要解密的暗文..." oninput="validateCipherText(this)"></textarea>
-            <div id="cipherWarning" class="warning" style="display: none;"></div>
+            <textarea id="decryptInput" placeholder="请输入要解密的暗文..."></textarea>
             <div class="button-group">
-                <button class="btn-decrypt" onclick="decryptText()" id="decryptBtn">暗文 → 明文</button>
-                <button class="btn-validate" onclick="validateCipherFormat()">格式检查</button>
+                <button class="btn-decrypt" onclick="decryptText()">暗文 → 明文</button>
                 <button class="btn-clear" onclick="clearCipher()">清空</button>
             </div>
         </div>
@@ -266,7 +169,6 @@
         <div class="section">
             <label for="decryptedText">解密结果：</label>
             <textarea id="decryptedText" placeholder="原始明文将显示在这里..." readonly></textarea>
-            <div id="decryptStats" class="validation-summary" style="display: none;"></div>
         </div>
 
         <div class="info" id="charInfo">
@@ -278,11 +180,6 @@
         // 默认的五个固定文字
         const defaultChars = ['天', '地', '玄', '黄', '宇'];
         let cipherChars = [...defaultChars];
-        
-        // 安全限制
-        const MAX_PLAIN_LENGTH = 1000;
-        const MAX_CIPHER_LENGTH = 5000;
-        const ALLOWED_CHARS_REGEX = /^[\u4e00-\u9fa5\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af\w\s.,!?;:()"'-]+$/;
         
         // 创建字符到数字的映射
         let charToNum = {};
@@ -309,119 +206,7 @@
             panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
         }
         
-        // 验证字符输入
-        function validateCharInput(input) {
-            const value = input.value;
-            if (value && !/^[\u4e00-\u9fa5]$/.test(value)) {
-                input.value = value.slice(0, -1);
-                showWarning('settingsWarning', '请使用单个中文字符');
-            } else {
-                hideWarning('settingsWarning');
-            }
-        }
-        
-        // 验证明文输入
-        function validatePlainText(textarea) {
-            const text = textarea.value;
-            const length = text.length;
-            document.getElementById('plainCount').textContent = length;
-            
-            if (length > MAX_PLAIN_LENGTH) {
-                textarea.value = text.slice(0, MAX_PLAIN_LENGTH);
-                showWarning('plainWarning', `文本长度超过${MAX_PLAIN_LENGTH}字符限制`);
-            } else if (!ALLOWED_CHARS_REGEX.test(text) && text.length > 0) {
-                showWarning('plainWarning', '包含非法字符，已自动过滤');
-                textarea.value = text.replace(/[^\u4e00-\u9fa5\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af\w\s.,!?;:()"'-]/g, '');
-            } else {
-                hideWarning('plainWarning');
-            }
-            
-            updateProgress('plainProgress', length, MAX_PLAIN_LENGTH);
-        }
-        
-        // 验证密文输入
-        function validateCipherText(textarea) {
-            const text = textarea.value;
-            const words = text.trim().split(/\s+/);
-            
-            if (text.length > MAX_CIPHER_LENGTH) {
-                textarea.value = text.slice(0, MAX_CIPHER_LENGTH);
-                showWarning('cipherWarning', `密文长度超过${MAX_CIPHER_LENGTH}字符限制`);
-            } else if (text.length > 0) {
-                const invalidChars = [...new Set(text.replace(/\s/g, '').split('').filter(c => !cipherChars.includes(c)))];
-                if (invalidChars.length > 0) {
-                    showWarning('cipherWarning', `检测到无效字符: ${invalidChars.join(', ')}`);
-                } else {
-                    hideWarning('cipherWarning');
-                }
-            }
-        }
-        
-        // 显示警告
-        function showWarning(elementId, message) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.style.display = 'block';
-            setTimeout(() => { element.style.display = 'none'; }, 3000);
-        }
-        
-        // 隐藏警告
-        function hideWarning(elementId) {
-            document.getElementById(elementId).style.display = 'none';
-        }
-        
-        // 更新进度条
-        function updateProgress(elementId, current, max) {
-            const percentage = Math.min((current / max) * 100, 100);
-            document.getElementById(elementId).style.width = percentage + '%';
-        }
-        
-        // 验证明文内容完整性
-        function validatePlainTextContent() {
-            const text = document.getElementById('plainText').value;
-            if (!text.trim()) {
-                showWarning('plainWarning', '请输入明文内容');
-                return false;
-            }
-            
-            const stats = {
-                length: text.length,
-                chinese: (text.match(/[\u4e00-\u9fa5]/g) || []).length,
-                english: (text.match(/[a-zA-Z]/g) || []).length,
-                numbers: (text.match(/\d/g) || []).length,
-                special: (text.match(/[^\u4e00-\u9fa5a-zA-Z0-9\s]/g) || []).length
-            };
-            
-            document.getElementById('plainWarning').className = 'success';
-            showWarning('plainWarning', `内容验证通过：共${stats.length}字符（中文${stats.chinese}，英文${stats.english}，数字${stats.numbers}，特殊${stats.special}）`);
-            return true;
-        }
-        
-        // 验证密文格式
-        function validateCipherFormat() {
-            const text = document.getElementById('decryptInput').value;
-            if (!text.trim()) {
-                showWarning('cipherWarning', '请输入密文内容');
-                return false;
-            }
-            
-            const words = text.trim().split(/\s+/);
-            const validWords = words.filter(word => /^[天地玄黄宇]+$/.test(word));
-            const invalidWords = words.filter(word => !/^[天地玄黄宇]+$/.test(word));
-            
-            let message = `格式检查：共${words.length}个密文单元`;
-            if (invalidWords.length > 0) {
-                message += `，发现${invalidWords.length}个无效单元`;
-                showWarning('cipherWarning', message);
-                return false;
-            } else {
-                document.getElementById('cipherWarning').className = 'success';
-                showWarning('cipherWarning', `${message}，格式正确`);
-                return true;
-            }
-        }
-        
-        // 保存自定义字符（增强验证）
+        // 保存自定义字符
         function saveCustomChars() {
             const chars = [];
             const inputs = [
@@ -433,11 +218,6 @@
             ];
             
             const errorDiv = document.getElementById('settingsError');
-            const warningDiv = document.getElementById('settingsWarning');
-            
-            // 重置样式
-            errorDiv.className = 'error';
-            warningDiv.className = 'warning';
             
             // 验证输入
             for (let i = 0; i < inputs.length; i++) {
@@ -451,20 +231,7 @@
                     errorDiv.style.display = 'block';
                     return;
                 }
-                if (!/^[\u4e00-\u9fa5]$/.test(inputs[i])) {
-                    errorDiv.textContent = '请使用单个中文字符';
-                    errorDiv.style.display = 'block';
-                    return;
-                }
                 chars.push(inputs[i]);
-            }
-            
-            // 安全检查：是否与常用字符冲突
-            const commonChars = ['的', '了', '在', '是', '我', '你', '他', '这', '那', '有'];
-            const conflicts = chars.filter(c => commonChars.includes(c));
-            if (conflicts.length > 0) {
-                warningDiv.textContent = `警告：使用常用字可能影响安全性 (${conflicts.join(',')})`;
-                warningDiv.style.display = 'block';
             }
             
             // 保存设置
@@ -477,13 +244,7 @@
             }
             
             errorDiv.style.display = 'none';
-            warningDiv.className = 'success';
-            warningDiv.textContent = '自定义字符设置已安全保存！';
-            warningDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                warningDiv.style.display = 'none';
-            }, 3000);
+            alert('自定义字符设置已保存！');
         }
         
         // 恢复默认设置
@@ -496,197 +257,102 @@
                 document.getElementById(`char${i}`).value = '';
             }
             
-            document.getElementById('settingsWarning').className = 'success';
-            showWarning('settingsWarning', '已安全恢复默认字符');
+            alert('已恢复默认字符：天地玄黄宇');
         }
         
-        // 安全的明文转暗文
+        // 明文转暗文
         function encryptText() {
             const plainText = document.getElementById('plainText').value;
-            
-            // 多重验证
             if (!plainText.trim()) {
-                showWarning('plainWarning', '请输入明文内容');
+                alert('请输入明文！');
                 return;
             }
-            
-            if (plainText.length > MAX_PLAIN_LENGTH) {
-                showWarning('plainWarning', `文本过长，限制${MAX_PLAIN_LENGTH}字符`);
-                return;
-            }
-            
-            if (!ALLOWED_CHARS_REGEX.test(plainText)) {
-                showWarning('plainWarning', '包含非法字符，已自动过滤');
-                document.getElementById('plainText').value = plainText.replace(/[^\u4e00-\u9fa5\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af\w\s.,!?;:()"'-]/g, '');
-                return;
-            }
-            
-            // 禁用按钮防止重复提交
-            const btn = document.getElementById('encryptBtn');
-            btn.disabled = true;
-            btn.textContent = '加密中...';
             
             let cipherText = '';
-            const startTime = Date.now();
+            
+            // 将每个字符转换为暗文
+            for (let i = 0; i < plainText.length; i++) {
+                const char = plainText[i];
+                const charCode = char.charCodeAt(0);
+                
+                // 将字符编码转换为暗文表示
+                const encrypted = encryptChar(charCode);
+                cipherText += encrypted + ' ';
+            }
+            
+            document.getElementById('cipherText').value = cipherText.trim();
+        }
+        
+        // 单个字符加密
+        function encryptChar(charCode) {
+            let result = '';
+            let num = charCode;
+            
+            // 使用5进制表示，每个数字对应一个暗文字符
+            while (num > 0) {
+                const remainder = num % 5;
+                result = numToChar[remainder] + result;
+                num = Math.floor(num / 5);
+            }
+            
+            // 确保至少有一个字符
+            if (result === '') {
+                result = numToChar[0];
+            }
+            
+            return result;
+        }
+        
+        // 暗文转明文
+        function decryptText() {
+            const cipherText = document.getElementById('decryptInput').value;
+            if (!cipherText.trim()) {
+                alert('请输入暗文！');
+                return;
+            }
+            
+            const cipherWords = cipherText.trim().split(/\s+/);
+            let plainText = '';
             
             try {
-                // 加密过程
-                for (let i = 0; i < plainText.length; i++) {
-                    const char = plainText[i];
-                    const charCode = char.charCodeAt(0);
-                    
-                    if (charCode > 0xFFFF) {
-                        throw new Error('检测到超出处理范围的字符');
-                    }
-                    
-                    const encrypted = encryptChar(charCode);
-                    cipherText += encrypted + ' ';
-                    
-                    // 更新进度
-                    updateProgress('cipherProgress', i + 1, plainText.length);
+                for (let word of cipherWords) {
+                    const decrypted = decryptWord(word);
+                    plainText += String.fromCharCode(decrypted);
                 }
                 
-                const endTime = Date.now();
-                const stats = {
-                    original: plainText.length,
-                    encrypted: cipherText.trim().split(/\s+/).length,
-                    ratio: (cipherText.length / plainText.length).toFixed(2),
-                    time: endTime - startTime
-                };
-                
-                document.getElementById('cipherText').value = cipherText.trim();
-                
-                // 显示统计信息
-                const statsDiv = document.getElementById('cipherStats');
-                statsDiv.innerHTML = `
-                    <strong>加密统计：</strong><br>
-                    原文：${stats.original}字符 | 
-                    密文：${stats.encrypted}单元 | 
-                    压缩比：${stats.ratio} | 
-                    耗时：${stats.time}ms
-                `;
-                statsDiv.style.display = 'block';
-                
-                document.getElementById('plainWarning').className = 'success';
-                showWarning('plainWarning', `加密完成！处理了${stats.original}个字符`);
-                
-            } catch (error) {
-                showWarning('plainWarning', `加密错误：${error.message}`);
-            } finally {
-                // 恢复按钮
-                btn.disabled = false;
-                btn.textContent = '明文 → 暗文';
-                setTimeout(() => {
-                    updateProgress('cipherProgress', 0, 100);
-                }, 1000);
+                document.getElementById('decryptedText').value = plainText;
+            } catch (e) {
+                alert(`暗文格式错误！请确保只包含"${cipherChars.join('')}"五个字`);
             }
         }
         
-        // 安全的暗文转明文
-        function decryptText() {
-            const cipherText = document.getElementById('decryptInput').value;
+        // 单个暗文字解密
+        function decryptWord(word) {
+            let result = 0;
             
-            // 多重验证
-            if (!cipherText.trim()) {
-                showWarning('cipherWarning', '请输入密文内容');
-                return;
-            }
-            
-            const words = cipherText.trim().split(/\s+/);
-            if (words.length > 1000) {
-                showWarning('cipherWarning', '密文单元过多，限制1000个');
-                return;
-            }
-            
-            // 验证每个密文单元
-            const invalidWords = [];
-            for (const word of words) {
-                if (!/^[天地玄黄宇]+$/.test(word)) {
-                    invalidWords.push(word);
+            for (let char of word) {
+                if (!(char in charToNum)) {
+                    throw new Error('Invalid cipher character');
                 }
+                result = result * 5 + charToNum[char];
             }
             
-            if (invalidWords.length > 0) {
-                showWarning('cipherWarning', `发现${invalidWords.length}个无效密文单元`);
-                return;
-            }
-            
-            // 禁用按钮防止重复提交
-            const btn = document.getElementById('decryptBtn');
-            btn.disabled = true;
-            btn.textContent = '解密中...';
-            
-            let plainText = '';
-            const startTime = Date.now();
-            
-            try {
-                for (let i = 0; i < words.length; i++) {
-                    const word = words[i];
-                    const decrypted = decryptWord(word);
-                    
-                    // 验证解密结果
-                    if (decrypted < 32 || decrypted > 0xFFFF) {
-                        throw new Error(`字符编码超出安全范围：${decrypted}`);
-                    }
-                    
-                    plainText += String.fromCharCode(decrypted);
-                    
-                    // 更新进度
-                    updateProgress('cipherProgress', i + 1, words.length);
-                }
-                
-                const endTime = Date.now();
-                const stats = {
-                    encrypted: words.length,
-                    decrypted: plainText.length,
-                    time: endTime - startTime
-                };
-                
-                document.getElementById('decryptedText').value = plainText;
-                
-                // 显示统计信息
-                const statsDiv = document.getElementById('decryptStats');
-                statsDiv.innerHTML = `
-                    <strong>解密统计：</strong><br>
-                    密文：${stats.encrypted}单元 | 
-                    原文：${stats.decrypted}字符 | 
-                    耗时：${stats.time}ms
-                `;
-                statsDiv.style.display = 'block';
-                
-                document.getElementById('cipherWarning').className = 'success';
-                showWarning('cipherWarning', `解密完成！还原了${stats.decrypted}个字符`);
-                
-            } catch (error) {
-                showWarning('cipherWarning', `解密错误：${error.message}`);
-            } finally {
-                // 恢复按钮
-                btn.disabled = false;
-                btn.textContent = '暗文 → 明文';
-                setTimeout(() => {
-                    updateProgress('cipherProgress', 0, 100);
-                }, 1000);
-            }
+            return result;
         }
         
         // 清空明文区域
         function clearPlain() {
             document.getElementById('plainText').value = '';
             document.getElementById('cipherText').value = '';
-            document.getElementById('plainCount').textContent = '0';
-            document.getElementById('cipherStats').style.display = 'none';
-            updateProgress('cipherProgress', 0, 100);
         }
         
         // 清空暗文区域
         function clearCipher() {
             document.getElementById('decryptInput').value = '';
             document.getElementById('decryptedText').value = '';
-            document.getElementById('decryptStats').style.display = 'none';
-            updateProgress('cipherProgress', 0, 100);
         }
         
-        // 键盘快捷键
+        // 允许按Enter键快速转换
         document.getElementById('plainText').addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'Enter') {
                 encryptText();
@@ -697,25 +363,6 @@
             if (e.ctrlKey && e.key === 'Enter') {
                 decryptText();
             }
-        });
-        
-        // 防止粘贴恶意内容
-        document.getElementById('plainText').addEventListener('paste', function(e) {
-            e.preventDefault();
-            const text = (e.clipboardData || window.clipboardData).getData('text');
-            const filtered = text.replace(/[^\u4e00-\u9fa5\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af\w\s.,!?;:()"'-]/g, '');
-            if (filtered.length > MAX_PLAIN_LENGTH) {
-                showWarning('plainWarning', '粘贴内容过长，已截取');
-                this.value = filtered.slice(0, MAX_PLAIN_LENGTH);
-            } else {
-                this.value = filtered;
-            }
-            validatePlainText(this);
-        });
-        
-        // 页面加载完成提示
-        window.addEventListener('load', function() {
-            console.log('安全翻译器已加载完成 - 包含多重验证机制');
         });
     </script>
 </body>
