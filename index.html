@@ -76,6 +76,19 @@
             background-color: #4CAF50;
             color: white;
         }
+        .btn-copy {
+            background-color: #9C27B0;
+            color: white;
+            flex: 0.5;
+        }
+        .btn-copy:hover {
+            opacity: 0.9;
+        }
+        .btn-copy-success {
+            background-color: #4CAF50;
+            color: white;
+            flex: 0.5;
+        }
         button:hover {
             opacity: 0.9;
         }
@@ -127,14 +140,25 @@
         <button class="btn-settings" onclick="toggleSettings()">⚙️ 设置自定义字符</button>
         
         <div id="settingsPanel" class="settings-panel">
-            <label>自定义五个固定字符：</label>
-            <div class="current-chars" id="currentChars">当前字符：天地玄黄宇</div>
-            <div class="char-input">
-                <input type="text" id="char1" maxlength="1" placeholder="字符1">
-                <input type="text" id="char2" maxlength="1" placeholder="字符2">
-                <input type="text" id="char3" maxlength="1" placeholder="字符3">
-                <input type="text" id="char4" maxlength="1" placeholder="字符4">
-                <input type="text" id="char5" maxlength="1" placeholder="字符5">
+            <label>自定义十六个固定字符：</label>
+            <div class="current-chars" id="currentChars">当前字符：天地玄黄宇宙洪荒日月星辰山川河海</div>
+            <div class="char-input" style="flex-wrap: wrap;">
+                <input type="text" id="char1" maxlength="1" placeholder="1">
+                <input type="text" id="char2" maxlength="1" placeholder="2">
+                <input type="text" id="char3" maxlength="1" placeholder="3">
+                <input type="text" id="char4" maxlength="1" placeholder="4">
+                <input type="text" id="char5" maxlength="1" placeholder="5">
+                <input type="text" id="char6" maxlength="1" placeholder="6">
+                <input type="text" id="char7" maxlength="1" placeholder="7">
+                <input type="text" id="char8" maxlength="1" placeholder="8">
+                <input type="text" id="char9" maxlength="1" placeholder="9">
+                <input type="text" id="char10" maxlength="1" placeholder="10">
+                <input type="text" id="char11" maxlength="1" placeholder="11">
+                <input type="text" id="char12" maxlength="1" placeholder="12">
+                <input type="text" id="char13" maxlength="1" placeholder="13">
+                <input type="text" id="char14" maxlength="1" placeholder="14">
+                <input type="text" id="char15" maxlength="1" placeholder="15">
+                <input type="text" id="char16" maxlength="1" placeholder="16">
             </div>
             <div id="settingsError" class="error" style="display: none;"></div>
             <div class="button-group">
@@ -155,6 +179,9 @@
         <div class="section">
             <label for="cipherText">暗文：</label>
             <textarea id="cipherText" placeholder="暗文将显示在这里..." readonly></textarea>
+            <div class="button-group">
+                <button class="btn-copy" onclick="copyToClipboard('cipherText')">📋 复制</button>
+            </div>
         </div>
 
         <div class="section">
@@ -169,6 +196,9 @@
         <div class="section">
             <label for="decryptedText">解密结果：</label>
             <textarea id="decryptedText" placeholder="原始明文将显示在这里..." readonly></textarea>
+            <div class="button-group">
+                <button class="btn-copy" onclick="copyToClipboard('decryptedText')">📋 复制</button>
+            </div>
         </div>
 
         <div class="info" id="charInfo">
@@ -177,8 +207,8 @@
     </div>
 
     <script>
-        // 默认的五个固定文字
-        const defaultChars = ['天', '地', '玄', '黄', '宇'];
+        // 默认的十六个固定文字（16进制需要16个字符）
+        const defaultChars = ['天', '地', '玄', '黄', '宇', '宙', '洪', '荒', '日', '月', '星', '辰', '山', '川', '河', '海'];
         let cipherChars = [...defaultChars];
         
         // 创建字符到数字的映射
@@ -194,7 +224,7 @@
                 numToChar[i] = cipherChars[i];
             }
             document.getElementById('currentChars').textContent = '当前字符：' + cipherChars.join('');
-            document.getElementById('charInfo').textContent = '提示：暗文由"' + cipherChars.join('') + '"五个固定文字的不同排列组合而成';
+            document.getElementById('charInfo').textContent = '提示：暗文由"' + cipherChars.join('') + '"十六个固定文字组成';
         }
         
         // 页面加载时初始化
@@ -214,7 +244,18 @@
                 document.getElementById('char2').value.trim(),
                 document.getElementById('char3').value.trim(),
                 document.getElementById('char4').value.trim(),
-                document.getElementById('char5').value.trim()
+                document.getElementById('char5').value.trim(),
+                document.getElementById('char6').value.trim(),
+                document.getElementById('char7').value.trim(),
+                document.getElementById('char8').value.trim(),
+                document.getElementById('char9').value.trim(),
+                document.getElementById('char10').value.trim(),
+                document.getElementById('char11').value.trim(),
+                document.getElementById('char12').value.trim(),
+                document.getElementById('char13').value.trim(),
+                document.getElementById('char14').value.trim(),
+                document.getElementById('char15').value.trim(),
+                document.getElementById('char16').value.trim()
             ];
             
             const errorDiv = document.getElementById('settingsError');
@@ -239,7 +280,7 @@
             initMappings();
             
             // 清空输入框
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 16; i++) {
                 document.getElementById(`char${i}`).value = '';
             }
             
@@ -253,11 +294,11 @@
             initMappings();
             
             // 清空输入框
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 16; i++) {
                 document.getElementById(`char${i}`).value = '';
             }
             
-            alert('已恢复默认字符：天地玄黄宇');
+            alert('已恢复默认字符：天地玄黄宇宙洪荒日月星辰山川河海');
         }
         
         // 明文转暗文
@@ -283,16 +324,16 @@
             document.getElementById('cipherText').value = cipherText.trim();
         }
         
-        // 单个字符加密
+        // 单个字符加密（16进制）
         function encryptChar(charCode) {
             let result = '';
             let num = charCode;
             
-            // 使用5进制表示，每个数字对应一个暗文字符
+            // 使用16进制表示，每个数字对应一个暗文字符
             while (num > 0) {
-                const remainder = num % 5;
+                const remainder = num % 16;
                 result = numToChar[remainder] + result;
-                num = Math.floor(num / 5);
+                num = Math.floor(num / 16);
             }
             
             // 确保至少有一个字符
@@ -322,11 +363,11 @@
                 
                 document.getElementById('decryptedText').value = plainText;
             } catch (e) {
-                alert(`暗文格式错误！请确保只包含"${cipherChars.join('')}"五个字`);
+                alert(`暗文格式错误！请确保只包含"${cipherChars.join('')}"十六个字`);
             }
         }
         
-        // 单个暗文字解密
+        // 单个暗文字解密（16进制）
         function decryptWord(word) {
             let result = 0;
             
@@ -334,7 +375,7 @@
                 if (!(char in charToNum)) {
                     throw new Error('Invalid cipher character');
                 }
-                result = result * 5 + charToNum[char];
+                result = result * 16 + charToNum[char];
             }
             
             return result;
@@ -350,6 +391,43 @@
         function clearCipher() {
             document.getElementById('decryptInput').value = '';
             document.getElementById('decryptedText').value = '';
+        }
+        
+        // 复制到剪贴板
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            // 选择文本并复制
+            element.select();
+            element.setSelectionRange(0, 99999); // 移动设备兼容
+            
+            try {
+                navigator.clipboard.writeText(element.value).then(() => {
+                    // 成功反馈
+                    button.innerHTML = '✅ 已复制';
+                    button.className = 'btn-copy-success';
+                    
+                    // 2秒后恢复原状
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.className = 'btn-copy';
+                    }, 2000);
+                }).catch(err => {
+                    // 备用方案
+                    document.execCommand('copy');
+                    button.innerHTML = '✅ 已复制';
+                    button.className = 'btn-copy-success';
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.className = 'btn-copy';
+                    }, 2000);
+                });
+            } catch (err) {
+                alert('复制失败，请手动选择复制');
+            }
         }
         
         // 允许按Enter键快速转换
