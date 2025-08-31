@@ -3,218 +3,606 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中文文本翻译器</title>
+    <title>文本翻译器 - 现代化加密工具</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --error-color: #f56565;
+            --info-color: #4299e1;
+            --background-color: #f7fafc;
+            --card-background: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --border-color: #e2e8f0;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
-            background-color: #f5f5f5;
+            color: var(--text-primary);
+            line-height: 1.6;
         }
+
         .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
         }
-        h1 {
+
+        .header {
+            grid-column: 1 / -1;
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        .section {
             margin-bottom: 20px;
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            resize: vertical;
-            min-height: 100px;
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        button {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .btn-encrypt {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .btn-decrypt {
-            background-color: #2196F3;
-            color: white;
-        }
-        .btn-clear {
-            background-color: #f44336;
-            color: white;
-        }
-        .btn-settings {
-            background-color: #FF9800;
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
             color: white;
             margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
-        .btn-save {
-            background-color: #4CAF50;
-            color: white;
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
         }
-        .btn-copy {
-            background-color: #9C27B0;
-            color: white;
-            flex: 0.5;
+
+        .card {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            padding: 30px;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
         }
-        .btn-copy:hover {
-            opacity: 0.9;
+
+        .card:hover {
+            box-shadow: var(--shadow-heavy);
+            transform: translateY(-2px);
         }
-        .btn-copy-success {
-            background-color: #4CAF50;
-            color: white;
-            flex: 0.5;
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-        .info {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            margin-top: 20px;
-        }
-        .settings-panel {
-            display: none;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-        }
-        .char-input {
+
+        .card-header {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
             gap: 10px;
-            margin: 10px 0;
         }
-        .char-input input {
-            flex: 1;
-            padding: 8px;
-            font-size: 18px;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
         }
-        .current-chars {
-            text-align: center;
-            font-size: 18px;
-            color: #333;
-            margin: 10px 0;
-            font-weight: bold;
+
+        .encrypt-icon { background: var(--success-color); }
+        .decrypt-icon { background: var(--info-color); }
+
+        .form-group {
+            margin-bottom: 20px;
         }
-        .error {
-            color: #f44336;
-            font-size: 14px;
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+            resize: vertical;
+            background: #fafafa;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
             margin-top: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            min-height: 44px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            flex: 1;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--info-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .settings-panel {
+            grid-column: 1 / -1;
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .settings-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .char-input {
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            background: #fafafa;
+        }
+
+        .char-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .current-chars-display {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0;
+            border: 2px dashed var(--border-color);
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 10px 0;
+            display: none;
+            border-left: 4px solid var(--error-color);
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            color: #276749;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 10px 0;
+            display: none;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--border-color);
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            word-break: break-all;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .result-display.has-content {
+            background: #e8f5e8;
+            border-color: var(--success-color);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .char-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .card {
+                padding: 15px;
+            }
+        }
+
+        .dark-mode {
+            --primary-color: #9f7aea;
+            --secondary-color: #805ad5;
+            --success-color: #68d391;
+            --warning-color: #f6ad55;
+            --error-color: #fc8181;
+            --info-color: #63b3ed;
+            --background-color: #1a202c;
+            --card-background: #2d3748;
+            --text-primary: #f7fafc;
+            --text-secondary: #a0aec0;
+            --border-color: #4a5568;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
         }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
+        <i class="fas fa-moon"></i>
+    </button>
+
     <div class="container">
-        <h1>中文文本翻译器</h1>
-        
-        <button class="btn-settings" onclick="toggleSettings()">⚙️ 设置自定义字符</button>
-        
-        <div id="settingsPanel" class="settings-panel">
-            <label>自定义十六个固定字符：</label>
-            <div class="current-chars" id="currentChars">当前字符：天地玄黄宇宙洪荒日月星辰山川河海</div>
-            <div class="char-input" style="flex-wrap: wrap;">
-                <input type="text" id="char1" maxlength="1" placeholder="1">
-                <input type="text" id="char2" maxlength="1" placeholder="2">
-                <input type="text" id="char3" maxlength="1" placeholder="3">
-                <input type="text" id="char4" maxlength="1" placeholder="4">
-                <input type="text" id="char5" maxlength="1" placeholder="5">
-                <input type="text" id="char6" maxlength="1" placeholder="6">
-                <input type="text" id="char7" maxlength="1" placeholder="7">
-                <input type="text" id="char8" maxlength="1" placeholder="8">
-                <input type="text" id="char9" maxlength="1" placeholder="9">
-                <input type="text" id="char10" maxlength="1" placeholder="10">
-                <input type="text" id="char11" maxlength="1" placeholder="11">
-                <input type="text" id="char12" maxlength="1" placeholder="12">
-                <input type="text" id="char13" maxlength="1" placeholder="13">
-                <input type="text" id="char14" maxlength="1" placeholder="14">
-                <input type="text" id="char15" maxlength="1" placeholder="15">
-                <input type="text" id="char16" maxlength="1" placeholder="16">
+        <div class="header">
+            <h1><i class="fas fa-shield-alt"></i> 文本翻译器</h1>
+            <p>文本翻译工具，支持自定义字符映射</p>
+        </div>
+
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-header">
+                <div class="settings-title">
+                    <i class="fas fa-cog"></i>
+                    自定义字符设置
+                </div>
+                <button class="btn btn-outline" onclick="toggleSettings()">
+                    <i class="fas fa-times"></i>
+                    关闭
+                </button>
             </div>
-            <div id="settingsError" class="error" style="display: none;"></div>
+            
+            <label class="form-label">当前字符映射：</label>
+            <div class="current-chars-display" id="currentChars">天地玄黄宇宙洪荒日月星辰山川河海</div>
+            
+            <label class="form-label">自定义十六个字符：</label>
+            <div class="char-grid">
+                <input type="text" class="char-input" id="char1" maxlength="1" placeholder="1">
+                <input type="text" class="char-input" id="char2" maxlength="1" placeholder="2">
+                <input type="text" class="char-input" id="char3" maxlength="1" placeholder="3">
+                <input type="text" class="char-input" id="char4" maxlength="1" placeholder="4">
+                <input type="text" class="char-input" id="char5" maxlength="1" placeholder="5">
+                <input type="text" class="char-input" id="char6" maxlength="1" placeholder="6">
+                <input type="text" class="char-input" id="char7" maxlength="1" placeholder="7">
+                <input type="text" class="char-input" id="char8" maxlength="1" placeholder="8">
+                <input type="text" class="char-input" id="char9" maxlength="1" placeholder="9">
+                <input type="text" class="char-input" id="char10" maxlength="1" placeholder="10">
+                <input type="text" class="char-input" id="char11" maxlength="1" placeholder="11">
+                <input type="text" class="char-input" id="char12" maxlength="1" placeholder="12">
+                <input type="text" class="char-input" id="char13" maxlength="1" placeholder="13">
+                <input type="text" class="char-input" id="char14" maxlength="1" placeholder="14">
+                <input type="text" class="char-input" id="char15" maxlength="1" placeholder="15">
+                <input type="text" class="char-input" id="char16" maxlength="1" placeholder="16">
+            </div>
+            
+            <div class="error-message" id="settingsError"></div>
+            <div class="success-message" id="settingsSuccess"></div>
+            
             <div class="button-group">
-                <button class="btn-save" onclick="saveCustomChars()">保存设置</button>
-                <button class="btn-clear" onclick="resetToDefault()">恢复默认</button>
+                <button class="btn btn-success" onclick="saveCustomChars()">
+                    <i class="fas fa-save"></i>
+                    保存设置
+                </button>
+                <button class="btn btn-warning" onclick="resetToDefault()">
+                    <i class="fas fa-undo"></i>
+                    恢复默认
+                </button>
             </div>
         </div>
 
-        <div class="section">
-            <label for="plainText">明文：</label>
-            <textarea id="plainText" placeholder="请输入要转换的明文..."></textarea>
+        <div class="card fade-in">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-icon encrypt-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    明文加密
+                </div>
+                <button class="btn btn-outline" onclick="toggleSettings()">
+                    <i class="fas fa-cog"></i>
+                    设置
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">输入明文：</label>
+                <textarea 
+                    class="form-textarea" 
+                    id="plainText" 
+                    placeholder="请输入要加密的明文内容..."
+                    oninput="updateCharCounter('plainText', 'plainCounter')"
+                ></textarea>
+                <div class="char-counter">
+                    <span id="plainCounter">0</span> 字符
+                </div>
+            </div>
+
             <div class="button-group">
-                <button class="btn-encrypt" onclick="encryptText()">明文 → 暗文</button>
-                <button class="btn-clear" onclick="clearPlain()">清空</button>
+                <button class="btn btn-primary" onclick="encryptText()">
+                    <i class="fas fa-arrow-right"></i>
+                    加密为暗文
+                </button>
+                <button class="btn btn-outline" onclick="clearPlain()">
+                    <i class="fas fa-trash"></i>
+                    清空
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">加密结果：</label>
+                <div class="result-display" id="cipherResult">
+                    <span>加密后的暗文将显示在这里</span>
+                </div>
+                <button class="btn btn-success" onclick="copyToClipboard('cipherResult')" style="margin-top: 10px;">
+                    <i class="fas fa-copy"></i>
+                    复制结果
+                </button>
             </div>
         </div>
 
-        <div class="section">
-            <label for="cipherText">暗文：</label>
-            <textarea id="cipherText" placeholder="暗文将显示在这里..." readonly></textarea>
+        <div class="card fade-in">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-icon decrypt-icon">
+                        <i class="fas fa-unlock"></i>
+                    </div>
+                    暗文解密
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">输入暗文：</label>
+                <textarea 
+                    class="form-textarea" 
+                    id="decryptInput" 
+                    placeholder="请输入要解密的暗文内容..."
+                    oninput="updateCharCounter('decryptInput', 'decryptCounter')"
+                ></textarea>
+                <div class="char-counter">
+                    <span id="decryptCounter">0</span> 字符
+                </div>
+            </div>
+
             <div class="button-group">
-                <button class="btn-copy" onclick="copyToClipboard('cipherText')">📋 复制</button>
+                <button class="btn btn-info" onclick="decryptText()">
+                    <i class="fas fa-arrow-left"></i>
+                    解密为明文
+                </button>
+                <button class="btn btn-outline" onclick="clearCipher()">
+                    <i class="fas fa-trash"></i>
+                    清空
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">解密结果：</label>
+                <div class="result-display" id="decryptResult">
+                    <span>解密后的明文将显示在这里</span>
+                </div>
+                <button class="btn btn-success" onclick="copyToClipboard('decryptResult')" style="margin-top: 10px;">
+                    <i class="fas fa-copy"></i>
+                    复制结果
+                </button>
             </div>
         </div>
-
-        <div class="section">
-            <label for="decryptInput">暗文输入：</label>
-            <textarea id="decryptInput" placeholder="请输入要解密的暗文..."></textarea>
-            <div class="button-group">
-                <button class="btn-decrypt" onclick="decryptText()">暗文 → 明文</button>
-                <button class="btn-clear" onclick="clearCipher()">清空</button>
-            </div>
-        </div>
-
-        <div class="section">
-            <label for="decryptedText">解密结果：</label>
-            <textarea id="decryptedText" placeholder="原始明文将显示在这里..." readonly></textarea>
-            <div class="button-group">
-                <button class="btn-copy" onclick="copyToClipboard('decryptedText')">📋 复制</button>
-            </div>
-        </div>
-
-        <div class="info" id="charInfo">
-            提示：暗文由"天地玄黄宇"五个固定文字的不同排列组合而成
-        </div>
-    </div>
-
+           
     <script>
-        // 默认的十六个固定文字（16进制需要16个字符）
+        // 默认的十六个固定文字
         const defaultChars = ['天', '地', '玄', '黄', '宇', '宙', '洪', '荒', '日', '月', '星', '辰', '山', '川', '河', '海'];
         let cipherChars = [...defaultChars];
-        
+
         // 创建字符到数字的映射
         let charToNum = {};
         let numToChar = {};
-        
+
         // 初始化映射表
         function initMappings() {
             charToNum = {};
@@ -223,225 +611,278 @@
                 charToNum[cipherChars[i]] = i;
                 numToChar[i] = cipherChars[i];
             }
-            document.getElementById('currentChars').textContent = '当前字符：' + cipherChars.join('');
-            document.getElementById('charInfo').textContent = '提示：暗文由"' + cipherChars.join('') + '"十六个固定文字组成';
+            document.getElementById('currentChars').textContent = cipherChars.join('');
+            document.getElementById('currentCharsInfo').textContent = cipherChars.join('');
         }
-        
+
         // 页面加载时初始化
         initMappings();
-        
+
         // 切换设置面板
         function toggleSettings() {
             const panel = document.getElementById('settingsPanel');
             panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
         }
-        
+
+        // 更新字符计数
+        function updateCharCounter(inputId, counterId) {
+            const count = document.getElementById(inputId).value.length;
+            document.getElementById(counterId).textContent = count;
+        }
+
         // 保存自定义字符
         function saveCustomChars() {
             const chars = [];
-            const inputs = [
-                document.getElementById('char1').value.trim(),
-                document.getElementById('char2').value.trim(),
-                document.getElementById('char3').value.trim(),
-                document.getElementById('char4').value.trim(),
-                document.getElementById('char5').value.trim(),
-                document.getElementById('char6').value.trim(),
-                document.getElementById('char7').value.trim(),
-                document.getElementById('char8').value.trim(),
-                document.getElementById('char9').value.trim(),
-                document.getElementById('char10').value.trim(),
-                document.getElementById('char11').value.trim(),
-                document.getElementById('char12').value.trim(),
-                document.getElementById('char13').value.trim(),
-                document.getElementById('char14').value.trim(),
-                document.getElementById('char15').value.trim(),
-                document.getElementById('char16').value.trim()
-            ];
-            
+            const inputs = Array.from({ length: 16 }, (_, i) => 
+                document.getElementById(`char${i + 1}`).value.trim()
+            );
+
             const errorDiv = document.getElementById('settingsError');
-            
+            const successDiv = document.getElementById('settingsSuccess');
+
+            // 重置消息
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
             // 验证输入
             for (let i = 0; i < inputs.length; i++) {
                 if (!inputs[i]) {
-                    errorDiv.textContent = `第${i+1}个字符不能为空！`;
+                    errorDiv.textContent = `第${i + 1}个字符不能为空！`;
                     errorDiv.style.display = 'block';
                     return;
                 }
                 if (chars.includes(inputs[i])) {
-                    errorDiv.textContent = '字符不能重复！';
+                    errorDiv.textContent = `字符"${inputs[i]}"重复了！`;
                     errorDiv.style.display = 'block';
                     return;
                 }
                 chars.push(inputs[i]);
             }
-            
+
             // 保存设置
             cipherChars = chars;
             initMappings();
-            
+
+            successDiv.textContent = '自定义字符设置已保存！';
+            successDiv.style.display = 'block';
+
             // 清空输入框
-            for (let i = 1; i <= 16; i++) {
-                document.getElementById(`char${i}`).value = '';
-            }
-            
-            errorDiv.style.display = 'none';
-            alert('自定义字符设置已保存！');
+            inputs.forEach((_, i) => {
+                document.getElementById(`char${i + 1}`).value = '';
+            });
+
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
         }
-        
+
         // 恢复默认设置
         function resetToDefault() {
             cipherChars = [...defaultChars];
             initMappings();
-            
+
             // 清空输入框
             for (let i = 1; i <= 16; i++) {
                 document.getElementById(`char${i}`).value = '';
             }
-            
-            alert('已恢复默认字符：天地玄黄宇宙洪荒日月星辰山川河海');
+
+            document.getElementById('settingsSuccess').textContent = '已恢复默认字符！';
+            document.getElementById('settingsSuccess').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('settingsSuccess').style.display = 'none';
+            }, 3000);
         }
-        
+
         // 明文转暗文
         function encryptText() {
             const plainText = document.getElementById('plainText').value;
             if (!plainText.trim()) {
-                alert('请输入明文！');
+                showNotification('请输入明文内容！', 'error');
                 return;
             }
-            
+
             let cipherText = '';
-            
-            // 将每个字符转换为暗文
             for (let i = 0; i < plainText.length; i++) {
                 const char = plainText[i];
                 const charCode = char.charCodeAt(0);
-                
-                // 将字符编码转换为暗文表示
                 const encrypted = encryptChar(charCode);
                 cipherText += encrypted + ' ';
             }
-            
-            document.getElementById('cipherText').value = cipherText.trim();
+
+            const resultDiv = document.getElementById('cipherResult');
+            resultDiv.textContent = cipherText.trim();
+            resultDiv.classList.add('has-content');
+            showNotification('加密完成！', 'success');
         }
-        
-        // 单个字符加密（16进制）
+
+        // 单个字符加密
         function encryptChar(charCode) {
             let result = '';
             let num = charCode;
             
-            // 使用16进制表示，每个数字对应一个暗文字符
             while (num > 0) {
                 const remainder = num % 16;
                 result = numToChar[remainder] + result;
                 num = Math.floor(num / 16);
             }
             
-            // 确保至少有一个字符
-            if (result === '') {
-                result = numToChar[0];
-            }
-            
-            return result;
+            return result || numToChar[0];
         }
-        
+
         // 暗文转明文
         function decryptText() {
             const cipherText = document.getElementById('decryptInput').value;
             if (!cipherText.trim()) {
-                alert('请输入暗文！');
+                showNotification('请输入暗文内容！', 'error');
                 return;
             }
-            
-            const cipherWords = cipherText.trim().split(/\s+/);
-            let plainText = '';
-            
+
             try {
+                const cipherWords = cipherText.trim().split(/\s+/);
+                let plainText = '';
+
                 for (let word of cipherWords) {
                     const decrypted = decryptWord(word);
                     plainText += String.fromCharCode(decrypted);
                 }
-                
-                document.getElementById('decryptedText').value = plainText;
+
+                const resultDiv = document.getElementById('decryptResult');
+                resultDiv.textContent = plainText;
+                resultDiv.classList.add('has-content');
+                showNotification('解密完成！', 'success');
             } catch (e) {
-                alert(`暗文格式错误！请确保只包含"${cipherChars.join('')}"十六个字`);
+                showNotification('暗文格式错误！请检查输入内容。', 'error');
             }
         }
-        
-        // 单个暗文字解密（16进制）
+
+        // 单个暗文字解密
         function decryptWord(word) {
             let result = 0;
-            
             for (let char of word) {
                 if (!(char in charToNum)) {
-                    throw new Error('Invalid cipher character');
+                    throw new Error('Invalid character');
                 }
                 result = result * 16 + charToNum[char];
             }
-            
             return result;
         }
-        
+
         // 清空明文区域
         function clearPlain() {
             document.getElementById('plainText').value = '';
-            document.getElementById('cipherText').value = '';
+            document.getElementById('cipherResult').textContent = '加密后的暗文将显示在这里';
+            document.getElementById('cipherResult').classList.remove('has-content');
+            updateCharCounter('plainText', 'plainCounter');
         }
-        
+
         // 清空暗文区域
         function clearCipher() {
             document.getElementById('decryptInput').value = '';
-            document.getElementById('decryptedText').value = '';
+            document.getElementById('decryptResult').textContent = '解密后的明文将显示在这里';
+            document.getElementById('decryptResult').classList.remove('has-content');
+            updateCharCounter('decryptInput', 'decryptCounter');
         }
-        
+
         // 复制到剪贴板
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
-            const button = event.target;
-            const originalText = button.innerHTML;
+            const text = element.textContent;
             
-            // 选择文本并复制
-            element.select();
-            element.setSelectionRange(0, 99999); // 移动设备兼容
-            
-            try {
-                navigator.clipboard.writeText(element.value).then(() => {
-                    // 成功反馈
-                    button.innerHTML = '✅ 已复制';
-                    button.className = 'btn-copy-success';
-                    
-                    // 2秒后恢复原状
-                    setTimeout(() => {
-                        button.innerHTML = originalText;
-                        button.className = 'btn-copy';
-                    }, 2000);
-                }).catch(err => {
-                    // 备用方案
-                    document.execCommand('copy');
-                    button.innerHTML = '✅ 已复制';
-                    button.className = 'btn-copy-success';
-                    
-                    setTimeout(() => {
-                        button.innerHTML = originalText;
-                        button.className = 'btn-copy';
-                    }, 2000);
-                });
-            } catch (err) {
-                alert('复制失败，请手动选择复制');
+            if (text === '加密后的暗文将显示在这里' || text === '解密后的明文将显示在这里') {
+                showNotification('没有内容可复制！', 'error');
+                return;
             }
+
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('已复制到剪贴板！', 'success');
+            }).catch(() => {
+                // 备用方案
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('已复制到剪贴板！', 'success');
+            });
         }
-        
-        // 允许按Enter键快速转换
-        document.getElementById('plainText').addEventListener('keydown', function(e) {
+
+        // 显示通知
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: var(--border-radius);
+                color: white;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+                max-width: 300px;
+            `;
+
+            if (type === 'success') {
+                notification.style.background = 'var(--success-color)';
+                notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            } else {
+                notification.style.background = 'var(--error-color)';
+                notification.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            }
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // 主题切换
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.querySelector('.theme-toggle i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // 加载保存的主题
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle i').className = 'fas fa-sun';
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'Enter') {
-                encryptText();
+                if (document.activeElement.id === 'plainText') {
+                    encryptText();
+                } else if (document.activeElement.id === 'decryptInput') {
+                    decryptText();
+                }
             }
         });
-        
-        document.getElementById('decryptInput').addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'Enter') {
-                decryptText();
+
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
-        });
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
